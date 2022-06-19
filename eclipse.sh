@@ -1,4 +1,4 @@
-wget -O eclipse.tar.gz http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/2021-03/R/eclipse-jee-2021-03-R-linux-gtk-x86_64.tar.gz
+wget -O eclipse.tar.gz https://eclipse.mirror.garr.it/technology/epp/downloads/release/2022-06/R/eclipse-jee-2022-06-R-linux-gtk-x86_64.tar.gz
 if [ -s *.tar.gz ]; then
   echo -e "Download completed.\n"
 else
