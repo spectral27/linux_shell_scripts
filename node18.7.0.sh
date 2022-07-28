@@ -38,3 +38,8 @@ if grep -q "export NODE_HOME" ~/.profile; then
     exit 1
   fi
 fi
+
+source ~/.profile
+
+sudo chown -R $USER:$USER /opt/$nodefolder/
+echo -e "Ownership of $nodefolder changed from root to $USER\n"
