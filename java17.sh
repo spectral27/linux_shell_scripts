@@ -24,7 +24,7 @@ if [ ! -d /inst/ ]; then
 fi
 
 if [ -d /inst/$jdkfolder ]; then
-  echo -e "Folder already exists\n"
+  echo -e "/inst/${jdkfolder} folder already exists\n"
   sudo rm -rf /inst/$jdkfolder
   echo -e "Already existing folder deleted\n"
 fi
