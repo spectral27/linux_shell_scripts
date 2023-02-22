@@ -15,24 +15,39 @@ else
   exit 1
 fi
 
-jdkfolder=$(basename $PWD/jdk*/) && echo -e "$jdkfolder \n"
+jdkfolder=$(basename $PWD/jdk*/) && echo -e "$jdkfolder\n"
 
-if [ -d /opt/$jdkfolder ]; then
+if [ ! -d /inst/ ]; then
+  echo -e "/inst directory not found, creating it\n"
+  sudo mkdir /inst/
+  sudo chmod a+rwx /inst/
+fi
+
+if [ -d /inst/$jdkfolder ]; then
   echo -e "Folder already exists\n"
+  sudo rm -rf /inst/$jdkfolder
+  echo -e "Already existing folder deleted\n"
+fi
+
+sudo mv jdk*/ /inst/
+if [ -d /inst/$jdkfolder ]; then
+  echo -e "Folder moved to /inst directory\n"
+else
+  echo -e "Folder not moved to /inst directory\n"
   exit 1
 fi
 
-sudo mv jdk*/ /opt && echo -e "\n"
-if [ -d /opt/$jdkfolder ]; then
-  echo -e "Folder moved to /opt directory\n"
-else
-  echo -e "Folder not moved to /opt directory\n"
-  exit 1
+if grep -q "export JAVA_HOME" ~/.profile && grep -q 'export PATH=$JAVA_HOME' ~/.profile; then
+  echo -e "Previous environment variables for Java found\n"
+  sed -i '/export JAVA_HOME.*/d' ~/.profile
+  sed -i '/export PATH=$JAVA_HOME.*/d' ~/.profile
+  echo -e "Previous environment variables for Java deleted\n"
 fi
 
 sudo echo "" >> ~/.profile
-sudo echo export JAVA_HOME=/opt/$jdkfolder >> ~/.profile
+sudo echo export JAVA_HOME=/inst/$jdkfolder >> ~/.profile
 sudo echo 'export PATH=$JAVA_HOME/bin:$PATH' >> ~/.profile
+sudo echo "" >> ~/.profile
 if grep -q "export JAVA_HOME" ~/.profile; then
   if grep -q 'export PATH=$JAVA_HOME' ~/.profile; then
     echo -e "Environment variable added\n"
@@ -43,3 +58,4 @@ if grep -q "export JAVA_HOME" ~/.profile; then
 fi
 
 echo -e "${jdkfolder} installation completed\n"
+
