@@ -18,9 +18,11 @@ fi
 jdkfolder=$(basename $PWD/jdk*/) && echo -e "$jdkfolder\n"
 
 if [ ! -d /inst/ ]; then
-  echo -e "/inst directory not found, creating it\n"
+  echo -e "/inst/ directory not found, creating it\n"
   sudo mkdir /inst/
   sudo chmod a+rwx /inst/
+else
+  echo -e "/inst/ directory found\n"
 fi
 
 if [ -d /inst/$jdkfolder ]; then
