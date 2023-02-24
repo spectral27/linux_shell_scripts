@@ -10,12 +10,16 @@ sudo add-apt-repository -y ppa:git-core/ppa
 sudo apt update
 sudo apt install git -y
 
-git config --global user.name "$1"
-git config --global user.email "$2"
+username=$1
+email=$2
+keyname=$3
 
-ssh-keygen -t ed25519 -C "$2"
-eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_ed25519
+git config --global user.name ${username}
+git config --global user.email ${email}
+
+ssh-keygen -t ed25519 -C ${email} -f /home/$USER/.ssh/${keyname}
+eval "$(ssh-agent)"
+ssh-add /home/$USER/.ssh/${keyname}
 
 sudo apt install gh -y
 gh auth login
@@ -26,5 +30,5 @@ gh auth login
 #How would you like to authenticate GitHub CLI? Login with a web browser
 
 gh auth refresh -h github.com -s admin:public_key
-gh ssh-key add ~/.ssh/id_ed25519.pub -t "$3"
+gh ssh-key add /home/$USER/.ssh/${keyname}.pub -t ${keyname}
 
