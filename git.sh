@@ -17,11 +17,23 @@ keyname=$3
 git config --global user.name ${username}
 git config --global user.email ${email}
 
+if [ -s /home/$USER/.ssh/${keyname} ]; then
+  echo "Key already exists, deleting key\n"
+  rm /home/$USER/.ssh/${keyname}
+  rm /home/$USER/.ssh/${keyname}.pub
+fi
+
 ssh-keygen -t ed25519 -C ${email} -f /home/$USER/.ssh/${keyname}
 eval "$(ssh-agent)"
 ssh-add /home/$USER/.ssh/${keyname}
 
-sudo apt install gh -y
+type -p curl > /dev/null || sudo apt install curl -y
+curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+&& sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+&& sudo apt update \
+&& sudo apt install gh -y
+
 gh auth login
 
 #What account do you want to log into? GitHub.com
@@ -30,5 +42,15 @@ gh auth login
 #How would you like to authenticate GitHub CLI? Login with a web browser
 
 gh auth refresh -h github.com -s admin:public_key
+
+gh ssh-key list > keys.txt
+
+keyvalue=$(grep -w $keyname keys.txt | awk '{print $5}')
+echo $varvalue
+
+gh ssh-key delete $keyvalue -y
+
+rm keys.txt
+
 gh ssh-key add /home/$USER/.ssh/${keyname}.pub -t ${keyname}
 
