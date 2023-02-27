@@ -46,7 +46,7 @@ gh auth refresh -h github.com -s admin:public_key
 gh ssh-key list > keys.txt
 
 keyvalue=$(grep -w $keyname keys.txt | awk '{print $5}')
-echo $varvalue
+echo $keyvalue
 
 gh ssh-key delete $keyvalue -y
 
