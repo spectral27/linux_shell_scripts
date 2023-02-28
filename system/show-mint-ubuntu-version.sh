@@ -1,0 +1,2 @@
+cat /etc/upstream-release/lsb-release
+
