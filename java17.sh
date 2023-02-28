@@ -26,6 +26,9 @@ fi
 # [&&] Execute commands only if the preceding command was successfully executed
 jdkfolder=$(basename $PWD/jdk*/) && echo "$jdkfolder\n"
 
+# [mkdir] Create directory
+# [chmod] Change permissions
+# [a+rwx] all, read write and execute
 if [ ! -d /inst/ ]; then
   echo -e "/inst/ directory not found, creating it\n"
   sudo mkdir /inst/
@@ -34,12 +37,16 @@ else
   echo -e "/inst/ directory found\n"
 fi
 
+# [rm] Remove files/directories
+# [-r] And all its content
+# [-f] Without asking
 if [ -d /inst/$jdkfolder ]; then
   echo -e "/inst/${jdkfolder} folder already exists\n"
   sudo rm -rf /inst/$jdkfolder
   echo -e "Already existing folder deleted\n"
 fi
 
+# [mv] Move file/directory from <path> to <path>
 sudo mv jdk*/ /inst/
 if [ -d /inst/$jdkfolder ]; then
   echo -e "Folder moved to /inst directory\n"
@@ -48,6 +55,11 @@ else
   exit 1
 fi
 
+# [grep] Print lines that match patterns
+# [-q] Quiet do not write anything to standard output
+# [sed] Transform text
+# [-i] Edit same input file
+# ['/pattern/d'] Delete lines that match the pattern
 if grep -q "export JAVA_HOME" ~/.profile && grep -q 'export PATH=$JAVA_HOME' ~/.profile; then
   echo -e "Previous environment variables for Java found\n"
   sed -i '/export JAVA_HOME.*/d' ~/.profile
