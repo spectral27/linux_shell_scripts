@@ -12,7 +12,9 @@ email=$2
 keyname=$3
 codename=$4
 
-#Git
+# +---------------+
+# | Git           |
+# +---------------+
 sh git.sh ${username} ${email} ${keyname}
 returncode=$? && echo "${returncode}\n"
 
@@ -23,7 +25,9 @@ fi
 
 echo "== Git installed ==\n"
 
-#Docker
+# +---------------+
+# | Docker        |
+# +---------------+
 sh docker.sh ${codename}
 returncode=$? && echo "${returncode}\n"
 
@@ -34,7 +38,9 @@ fi
 
 echo "== Docker installed ==\n"
 
-#Minikube
+# +---------------+
+# | Minikube      |
+# +---------------+
 sh minikube.sh
 returncode=$? && echo "${returncode}\n"
 
@@ -45,14 +51,16 @@ fi
 
 echo "== Minikube installed ==\n"
 
-#Kubectl
+# +---------------+
+# | kubectl       |
+# +---------------+
 sh kubectl.sh
 returncode=$? && echo "${returncode}\n"
 
 if [ ${returncode} -gt 0 ]; then
-  echo "Kubectl installation error"
+  echo "kubectl installation error"
   exit 1
 fi
 
-echo "== Kubectl installed ==\n"
+echo "== kubectl installed ==\n"
 
