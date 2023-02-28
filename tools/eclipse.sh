@@ -15,7 +15,7 @@ else
   exit 1
 fi
 
-echo root | sudo -S cp -R eclipse/ ~ && sudo -S rm -R eclipse/ && echo -e "\n"
+sudo cp -R eclipse/ ~ && sudo rm -R eclipse/ && echo -e "\n"
 if [ -d ~/eclipse ]; then
   echo -e "Folder moved to /opt directory.\n"
 else
@@ -26,8 +26,8 @@ fi
 touch Eclipse.desktop
 echo -e "[Desktop Entry]\nVersion=1.0" >> Eclipse.desktop
 echo -e "Type=Application\nName=Eclipse" >> Eclipse.desktop
-echo -e "Exec=/home/gsoldano/eclipse/eclipse" >> Eclipse.desktop
-echo -e "Icon=/home/gsoldano/eclipse/icon.xpm" >> Eclipse.desktop
+echo -e "Exec=/home/$USER/eclipse/eclipse" >> Eclipse.desktop
+echo -e "Icon=/home/$USER/eclipse/icon.xpm" >> Eclipse.desktop
 echo -e "Terminal=false\nCategories=Development" >> Eclipse.desktop
 echo root | sudo -S mv Eclipse.desktop /usr/share/applications
 if [ -s /usr/share/applications/Eclipse.desktop ]; then
@@ -35,3 +35,4 @@ if [ -s /usr/share/applications/Eclipse.desktop ]; then
 else
   echo -e "Something went wrong when creating the launcher.\n"
 fi
+

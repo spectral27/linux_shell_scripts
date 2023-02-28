@@ -17,8 +17,6 @@ fi
 
 nodefolder=$(basename $PWD/node*/) && echo -e "$nodefolder \n"
 
-echo root | sudo -S echo ""
-
 sudo cp -R node*/ /opt && sudo rm -R node*/ && echo ""
 if [ -d /opt/$nodefolder ]; then
   echo -e "Folder moved to /opt directory.\n"
