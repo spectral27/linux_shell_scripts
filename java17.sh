@@ -1,22 +1,30 @@
 wget https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.tar.gz
 
-if [ -s *.tar.gz ]; then
-  echo -e "Download completed\n"
+# [-f] Check if file exists
+if [ -f *.tar.gz ]; then
+  echo "Download completed\n"
 else
-  echo -e "File not downloaded\n"
+  echo "File not downloaded\n"
   exit 1
 fi
 
+# [-x] Extract
+# [-f] Specify the name of an archive file
+# [-d] Check if directory exists
 tar -xf jdk*.tar.gz
 if [ -d $PWD/jdk*/ ]; then
   rm jdk*.tar.gz
-  echo -e "Extraction completed\n"
+  echo "Extraction completed\n"
 else
-  echo -e "Extraction not performed\n"
+  echo "Extraction not performed\n"
   exit 1
 fi
 
-jdkfolder=$(basename $PWD/jdk*/) && echo -e "$jdkfolder\n"
+# [$(command)] Store the output in a variable
+# [basename] Print the last element of a file path
+# [$PWD] Print current absolute path
+# [&&] Execute commands only if the preceding command was successfully executed
+jdkfolder=$(basename $PWD/jdk*/) && echo "$jdkfolder\n"
 
 if [ ! -d /inst/ ]; then
   echo -e "/inst/ directory not found, creating it\n"
