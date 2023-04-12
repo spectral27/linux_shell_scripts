@@ -1,8 +1,8 @@
 if [ $# -lt 3 ]; then
-  echo "Script needs three arguments to run"
-  echo "Username as first argument"
-  echo "User email as second argument"
-  echo "Name to give to GitHub ssh key as third argument"
+  echo "Script needs three arguments:"
+  echo "1. username"
+  echo "2. email"
+  echo "3. ssh key name"
   exit 1
 fi
 
@@ -12,49 +12,22 @@ sudo apt install git -y
 
 username=$1
 email=$2
-keyname=$3
+sshkeyname=$3
 
-git config --global user.name ${username}
-git config --global user.email ${email}
+git config --global user.name $username
+git config --global user.email $email
 
-if [ -s /home/$USER/.ssh/${keyname} ]; then
+if [ -f /home/$USER/.ssh/$sshkeyname ]; then
   echo "Key already exists, deleting key\n"
-  rm /home/$USER/.ssh/${keyname}
-  rm /home/$USER/.ssh/${keyname}.pub
+  rm /home/$USER/.ssh/$sshkeyname
+  rm /home/$USER/.ssh/$sshkeyname.pub
 fi
 
-ssh-keygen -t ed25519 -C ${email} -f /home/$USER/.ssh/${keyname}
-eval "$(ssh-agent)"
-ssh-add /home/$USER/.ssh/${keyname}
+ssh-keygen -t ed25519 -C $email -f /home/$USER/.ssh/$sshkeyname
+eval "$(ssh-agent -s)"
+ssh-add /home/$USER/.ssh/$sshkeyname
 
-type -p curl > /dev/null || sudo apt install curl -y
-curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
-sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
+echo "Host github.com" >> ~/.ssh/config
+echo "  IdentityFile ~/.ssh/${sshkeyname}" >> ~/.ssh/config
 
-archsignedby="[arch=amd64 signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg]"
-stable="https://cli.github.com/packages stable main"
-
-echo "deb $archsignedby $stable" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-sudo apt update
-sudo apt install gh -y
-
-gh auth login
-
-#What account do you want to log into? GitHub.com
-#What is your preferred protocol for Git operations? SSH
-#Upload your SSH public key to your GitHub account? Skip
-#How would you like to authenticate GitHub CLI? Login with a web browser
-
-gh auth refresh -h github.com -s admin:public_key
-
-gh ssh-key list > keys.txt
-
-keyvalue=$(grep -w $keyname keys.txt | awk '{print $5}')
-echo $keyvalue
-
-gh ssh-key delete $keyvalue -y
-
-rm keys.txt
-
-gh ssh-key add /home/$USER/.ssh/${keyname}.pub -t ${keyname}
-
+echo "Login into GitHub, create new ssh key and copy content of ${sshkeyname}"
